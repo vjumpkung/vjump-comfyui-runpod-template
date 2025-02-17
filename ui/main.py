@@ -147,6 +147,9 @@ def download(name: str, url: str, type: str):
     destination = ""
     filename = ""
 
+    if type == "checkpoints":
+        type = "ckpts"
+
     destination = f"./my-runpod-volume/models/{type}/"
 
     print(f"Starting download: {name}")

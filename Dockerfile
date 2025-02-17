@@ -60,8 +60,14 @@ RUN comfy --workspace /notebooks/ComfyUI node restore-snapshot snapshot.json --p
 
 WORKDIR /notebooks
 
+RUN mkdir -p ./src/ ./ui/
+
 COPY resource_manager.ipynb .
 COPY start_comfyui_here.ipynb .
+COPY start.sh .
+COPY pre_download_model.py .
+COPY ui/. ./ui/
+COPY src/. ./src/
 
 WORKDIR /notebooks/ComfyUI
 
