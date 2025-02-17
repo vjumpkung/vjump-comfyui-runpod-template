@@ -40,6 +40,12 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install comfy-cli
 RUN pip install comfy-cli
+# JupyterLab and other python packages
+RUN pip install --no-cache-dir jupyterlab jupyter-archive nbformat \
+    jupyterlab-git ipywidgets ipykernel ipython pickleshare \
+    requests python-dotenv nvitop gdown && \
+    pip install --no-cache-dir "numpy<2" && \
+    pip cache purge
 
 # Install ComfyUI
 RUN /usr/bin/yes | comfy --workspace /notebooks/ComfyUI install --cuda-version 12.4 --nvidia --version 0.3.14
@@ -55,17 +61,13 @@ RUN comfy --workspace /notebooks/ComfyUI node restore-snapshot snapshot.json --p
 WORKDIR /notebooks
 
 COPY resource_manager.ipynb .
+COPY start_comfyui_here.ipynb .
 
 WORKDIR /notebooks/ComfyUI
 
 COPY src/extra_model_paths.yaml .
 
-# JupyterLab and other python packages
-RUN pip install --no-cache-dir jupyterlab jupyter-archive nbformat \
-    jupyterlab-git ipywidgets ipykernel ipython pickleshare \
-    requests python-dotenv nvitop gdown && \
-    pip install --no-cache-dir "numpy<2" && \
-    pip cache purge
+WORKDIR /notebooks
 
 EXPOSE 8188 8888
 CMD ["jupyter", "lab", "--allow-root", "--ip=0.0.0.0", "--no-browser", \
