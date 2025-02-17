@@ -147,7 +147,7 @@ def download(name: str, url: str, type: str):
     destination = ""
     filename = ""
 
-    destination = f"./my-runpod-volume/{type}/"
+    destination = f"./my-runpod-volume/models/{type}/"
 
     print(f"Starting download: {name}")
 
