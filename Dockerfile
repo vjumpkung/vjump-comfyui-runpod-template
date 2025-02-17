@@ -19,7 +19,7 @@ RUN mkdir -p /notebooks /comfyui_setup_temp
 # Install Python, git and other necessary tools
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 RUN apt-get update --yes && \
-    apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common openssh-server google-perftools && \
+    apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common&& \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --yes && \
     apt-get install --yes --no-install-recommends "python${PYTHON_VERSION}" "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" "python${PYTHON_VERSION}-tk" && \
@@ -59,6 +59,13 @@ COPY resource_manager.ipynb .
 WORKDIR /notebooks/ComfyUI
 
 COPY src/extra_model_paths.yaml .
+
+# JupyterLab and other python packages
+RUN pip install --no-cache-dir jupyterlab jupyter-archive nbformat \
+    jupyterlab-git ipywidgets ipykernel ipython pickleshare \
+    requests python-dotenv nvitop gdown && \
+    pip install --no-cache-dir "numpy<2" && \
+    pip cache purge
 
 EXPOSE 8188 8888
 CMD ["jupyter", "lab", "--allow-root", "--ip=0.0.0.0", "--no-browser", \
