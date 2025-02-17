@@ -58,6 +58,10 @@ COPY src/snapshot.json .
 
 RUN comfy --workspace /notebooks/ComfyUI node restore-snapshot snapshot.json --pip-non-url
 
+# installing ReActor
+WORKDIR /notebooks/ComfyUI/custom_nodes
+RUN git clone https://github.com/Gourieff/ComfyUI-ReActor.git && cd ComfyUI-ReActor && python install.py
+
 WORKDIR /notebooks
 
 RUN mkdir -p ./src/ ./ui/

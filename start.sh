@@ -4,17 +4,17 @@ export PLATFORM_ID="RUNPOD"
 
 # Download notebooks
 download_notebooks() {
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/"$BRANCH_ID"/start_comfyui_here.ipynb >start_comfyui_here.ipynb
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/"$BRANCH_ID"/resource_manager.ipynb >resource_manager.ipynb
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/"$BRANCH_ID"/ui/main.py >./ui/main.py
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/"$BRANCH_ID"/ui/google_drive_download.py >./ui/google_drive_download.py
+    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
+    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
+    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
+    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
 }
 
 download_model() {
     if [[ -z $PRE_DOWNLOAD_MODEL_URL ]]; then
         echo "No PRE_DOWNLOAD_MODEL_URL provided SKIP!"
     else
-        python pre_download_model --input $PRE_DOWNLOAD_MODEL_URL
+        python pre_download_model.py --input $PRE_DOWNLOAD_MODEL_URL
     fi
 }
 
