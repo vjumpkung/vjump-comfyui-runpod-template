@@ -276,7 +276,7 @@ def launch_comfyui():
         command = "python -u main.py --listen 0.0.0.0 --disable-auto-launch"
 
         if platform_id == "RUNPOD":
-            proxy_url = f'URL : https://{os.environ.get("RUNPOD_POD_ID")}-{7860}.proxy.runpod.net'
+            proxy_url = f'URL : https://{os.environ.get("RUNPOD_POD_ID")}-{8188}.proxy.runpod.net'
         elif platform_id == "PAPERSPACE":
             proxy_url = f'URL : https://tensorboard-{os.environ.get("PAPERSPACE_FQDN")}'
 
