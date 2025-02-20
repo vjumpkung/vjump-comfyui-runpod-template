@@ -12,7 +12,7 @@ download_notebooks() {
 
 download_model() {
     if [[ -z $PRE_DOWNLOAD_MODEL_URL ]]; then
-        echo "No PRE_DOWNLOAD_MODEL_URL provided SKIP!"
+        echo "No PRE_DOWNLOAD_MODEL_URL provided skip download"
     else
         python pre_download_model.py --input $PRE_DOWNLOAD_MODEL_URL
     fi
@@ -49,11 +49,16 @@ export_env_vars() {
 }
 
 make_directory() {
-    mkdir -p /notebooks/my-runpod-volume/models/{CatVTON,LLM,animatediff_models,animatediff_motion_lora,ckpts,clip,clip_vision,configs,controlnet,diffusers,diffusion_models,embeddings,facedetection,facerestore_models,gligen,grounding-dino,hypernetworks,insightface,ipadapter,loras,mmdets,nsfw_detector,onnx,photomaker,reactor,rembg,reswapper,sam2,sams,style_models,text_encoders,ultralytics,unet,upscale_models,vae,vae_approx}
+    mkdir -p /notebooks/my-runpod-volume/models/{ultralytics_bbox,CatVTON,LLM,animatediff_models,animatediff_motion_lora,ckpts,clip,clip_vision,configs,controlnet,diffusers,diffusion_models,embeddings,facedetection,facerestore_models,gligen,grounding-dino,hypernetworks,insightface,ipadapter,loras,mmdets,nsfw_detector,onnx,photomaker,reactor,rembg,reswapper,sam2,sams,style_models,text_encoders,ultralytics,unet,upscale_models,vae,vae_approx}
+}
+
+run_custom_script() {
+    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/custom_script.sh -sSf | bash -s -- -y
 }
 
 echo "Pod Started"
 start_jupyter
+run_custom_script
 export_env_vars
 make_directory
 download_notebooks

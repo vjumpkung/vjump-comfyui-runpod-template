@@ -32,6 +32,7 @@ runpod_worker_comfy:
   style_models: models/style_models/
   text_encoders: models/text_encoders/
   ultralytics: models/ultralytics/
+  ultralytics_bbox: models/ultralytics_bbox/
   unet: models/unet/
   upscale_models: models/upscale_models/
   vae: models/vae/

@@ -3,7 +3,6 @@ from IPython.display import display
 import subprocess
 import os
 import shlex
-import zipfile
 import requests
 import torch
 
@@ -15,35 +14,23 @@ if "RUNPOD_POD_ID" in os.environ.keys():
 elif "PAPERSPACE_FQDN" in os.environ.keys():
     platform_id = "PAPERSPACE"
 
+model_list_url = "https://pastebin.com/raw/xQpdW2ka"
+
 
 class Envs:
     def __init__(self):
         self.CIVITAI_TOKEN = ""
         self.HUGGINGFACE_TOKEN = ""
 
+    def get_enviroment_variable(self):
+        if "CIVITAI_TOKEN" in os.environ.keys() and self.CIVITAI_TOKEN == "":
+            self.CIVITAI_TOKEN = os.environ["CIVITAI_TOKEN"]
+        if "HUGGINGFACE_TOKEN" in os.environ.keys() and self.HUGGINGFACE_TOKEN == "":
+            self.HUGGINGFACE_TOKEN = os.environ["HUGGINGFACE_TOKEN"]
+
 
 envs = Envs()
-
-model_url = "https://gist.githubusercontent.com/vjumpkung/4663f8a608699ac80f1769a6bd0daee4/raw/9f3411a6eb51bd4244bb655bee8b458330284f89/vjump_notebook_model_template.json"
-clip_vae_url = "https://gist.githubusercontent.com/vjumpkung/421667857264bc11686cb28026f374dd/raw/6210ee04b03f362043ccc1c2974d8d3df7da26b6/vjump_notebook_clipvae.json"
-
-
-def get_model_list():
-
-    r = requests.get(model_url)
-
-    data = r.json()
-
-    return data
-
-
-def get_clip_list():
-
-    r = requests.get(clip_vae_url)
-
-    data = r.json()
-
-    return data
+envs.get_enviroment_variable()
 
 
 def test():
@@ -63,10 +50,29 @@ def setup():
         headers = widgets.HBox([warn])
         display(headers)
 
+    if len(envs.CIVITAI_TOKEN) > 0:
+        civitapikey = "Imported From Environment Variable"
+    else:
+        civitapikey = ""
+    if len(envs.HUGGINGFACE_TOKEN) > 0:
+        huggingfacekey = "Imported From Environment Variable"
+    else:
+        huggingfacekey = ""
+
     settings = []
     input_list = [
-        ("CIVITAI_TOKEN", "CivitAI API Key", "Paste your API key here", ""),
-        ("HUGGINGFACE_TOKEN", "Huggingface API Key", "Paste your API key here", ""),
+        (
+            "CIVITAI_TOKEN",
+            "CivitAI API Key",
+            "Paste your API key here",
+            civitapikey,
+        ),
+        (
+            "HUGGINGFACE_TOKEN",
+            "Huggingface API Key",
+            "Paste your API key here",
+            huggingfacekey,
+        ),
     ]
 
     save_button = widgets.Button(description="Save", button_style="primary")
@@ -89,9 +95,17 @@ def setup():
         with output:
             for key, textInput in settings:
                 if key == "CIVITAI_TOKEN":
-                    envs.CIVITAI_TOKEN = textInput.value
+                    if (
+                        textInput.value != "Imported From Environment Variable"
+                        or textInput.value != ""
+                    ):
+                        envs.CIVITAI_TOKEN = textInput.value
                 elif key == "HUGGINGFACE_TOKEN":
-                    envs.HUGGINGFACE_TOKEN = textInput.value
+                    if (
+                        textInput.value != "Imported From Environment Variable"
+                        or textInput.value != ""
+                    ):
+                        envs.HUGGINGFACE_TOKEN = textInput.value
             print("\nSaved ✔")
 
     save_button.on_click(on_save)
@@ -140,6 +154,11 @@ check_types = [
 
 def download(name: str, url: str, type: str):
 
+    if "envs" not in globals():
+        global envs
+        envs = Envs()
+        envs.get_enviroment_variable()
+
     if type not in check_types:
         print("Invalid Model Type")
         return
@@ -152,9 +171,9 @@ def download(name: str, url: str, type: str):
 
     destination = f"./my-runpod-volume/models/{type}/"
 
-    print(f"Starting download: {name}")
+    print(f"Starting download: {name}\n")
 
-    if envs.CIVITAI_TOKEN != "":
+    if "civitai" in url and envs.CIVITAI_TOKEN != "":
         if "?" in url:
             url += f"&token={envs.CIVITAI_TOKEN}"
         else:
@@ -162,7 +181,7 @@ def download(name: str, url: str, type: str):
 
     command = f"aria2c --console-log-level=error -c -x 16 -s 16 -k 1M {url} --dir={destination} --download-result=hide"
 
-    if envs.HUGGINGFACE_TOKEN != "":
+    if "huggingface" in url and envs.HUGGINGFACE_TOKEN != "":
         command += f' --header="Authorization: Bearer {envs.HUGGINGFACE_TOKEN}"'
 
     if "huggingface" in url:
@@ -200,9 +219,61 @@ def download(name: str, url: str, type: str):
     print(f"Download completed: {name}")
 
 
+def select_download_model_list():
+    models_header = widgets.HTML('<h3 style="width: 200px;">Model List</h3>')
+    headers = widgets.HBox([models_header])
+    display(headers)
+
+    get_model_list = requests.get(model_list_url).json()
+
+    checkboxes = []
+
+    for item in get_model_list:
+        checkbox = widgets.Checkbox(
+            value=False,
+            description=item["name"],
+            indent=False,
+            layout={"width": "auto"},
+        )
+        val = item["url"]
+        checkboxes.append((checkbox, val))
+        display(checkbox)
+
+    download_button = widgets.Button(description="Download", button_style="primary")
+
+    output = widgets.Output()
+
+    def on_press(button):
+        with output:
+            output.clear_output()
+            try:
+                for _checkbox, _url in checkboxes:
+                    if _checkbox.value:
+                        command = f"python pre_download_model.py --input {_url}"
+                        with subprocess.Popen(
+                            shlex.split(command),
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT,
+                            text=True,
+                            bufsize=1,
+                        ) as sp:
+                            for line in sp.stdout:
+                                print(line.strip())
+                output.clear_output()
+                completed_message()
+
+            except KeyboardInterrupt:
+                output.clear_output()
+                print("\n\n--Download Model interrupted--")
+
+    download_button.on_click(on_press)
+
+    display(download_button, output)
+
+
 def download_models():
     models_header = widgets.HTML(
-        '<h4 style="width: auto;">Download Model จาก Google Drive, CivitAI หรือ Huggingface</h4>'
+        '<h3 style="width: auto;">Download Model จาก Google Drive, CivitAI หรือ Huggingface</h3>'
     )
     display(models_header)
 
@@ -245,10 +316,11 @@ def download_models():
                         url_model.value,
                         model_type.value,
                     )
-
+                output.clear_output()
                 completed_message()
 
             except KeyboardInterrupt:
+                output.clear_output()
                 print("\n\n--Download Model interrupted--")
 
     download_button.on_click(on_press)
@@ -265,18 +337,18 @@ def completed_message():
 
 
 def launch_comfyui():
-
+    os.makedirs("/notebooks/output_images/", exist_ok=True)
     models_header = widgets.HTML(
         '<h3 style="width: 250px;">เริ่มโปรแกรม ComfyUI ตรงนี้</h3>'
     )
     display(models_header)
     output = widgets.Output()
 
-    def run_gui(button):
+    def run_comfyui(button):
 
         os.chdir("/notebooks/")
 
-        command = "python -u main.py --listen 0.0.0.0 --disable-auto-launch"
+        command = "python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/"
 
         if platform_id == "RUNPOD":
             proxy_url = f'URL : https://{os.environ.get("RUNPOD_POD_ID")}-{8188}.proxy.runpod.net'
@@ -297,7 +369,7 @@ def launch_comfyui():
 
             with output:
                 output.clear_output()
-                print("kohya-ss GUI has been started see logs at console")
+                print("ComfyUI has been started")
                 print(proxy_url)
 
                 for i in process.stdout:
@@ -315,6 +387,6 @@ def launch_comfyui():
 
     start_button = widgets.Button(description="START ComfyUI", button_style="primary")
 
-    start_button.on_click(run_gui)
+    start_button.on_click(run_comfyui)
 
     display(start_button, output)
