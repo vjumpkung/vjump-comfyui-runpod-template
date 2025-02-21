@@ -2,6 +2,16 @@
 
 export PLATFORM_ID="RUNPOD"
 
+configure_dns() {
+    echo "Configuring DNS settings..."
+    # Backup the current resolv.conf
+    cp /etc/resolv.conf /etc/resolv.conf.backup
+    # Use Google's public DNS servers
+    echo "nameserver 8.8.8.8
+nameserver 8.8.4.4" >/etc/resolv.conf
+    echo "DNS configuration updated."
+}
+
 # Download notebooks
 download_notebooks() {
     curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
@@ -58,6 +68,7 @@ run_custom_script() {
 
 echo "Pod Started"
 start_jupyter
+configure_dns
 run_custom_script
 export_env_vars
 make_directory
