@@ -52,7 +52,7 @@ COPY src/nginx_comfyui_conf.conf /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/nginx_comfyui_conf.conf /etc/nginx/sites-enabled/
 
 # Install ComfyUI
-RUN /usr/bin/yes | comfy --workspace /notebooks/ComfyUI install --cuda-version 12.4 --nvidia --version 0.3.14
+RUN /usr/bin/yes | comfy --workspace /notebooks/ComfyUI install --cuda-version 12.4 --nvidia
 
 # restore snapshot
 

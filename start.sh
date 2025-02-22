@@ -1,8 +1,9 @@
 #!/bin/bash
-
+export BRANCH_ID=${BRANCH_ID:-main}
 export PLATFORM_ID="RUNPOD"
 
 start_nginx() {
+    echo "Start NGINX"
     service nginx start
 }
 
@@ -71,8 +72,8 @@ run_custom_script() {
 }
 
 echo "Pod Started"
-run_custom_script
 configure_dns
+run_custom_script
 export_env_vars
 make_directory
 download_notebooks
