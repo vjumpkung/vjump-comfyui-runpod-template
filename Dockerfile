@@ -1,7 +1,7 @@
 # Stage 1: Base image with common dependencies
 FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04 as base
 
-ARG PYTHON_VERSION="3.10"
+ARG PYTHON_VERSION="3.12"
 ARG CONTAINER_TIMEZONE=UTC 
 
 # Prevents prompts from packages asking for user input during installation
@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED=1
 ENV CMAKE_BUILD_PARALLEL_LEVEL=8
 
 # create notebooks dir
-RUN mkdir -p /notebooks /comfyui_setup_temp /etc/nginx/sites-available/
+RUN mkdir -p /notebooks
 
 # Install Python, git and other necessary tools
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
@@ -22,26 +22,22 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common nginx&& \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --yes && \
-    apt-get install --yes --no-install-recommends "python${PYTHON_VERSION}" "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" "python${PYTHON_VERSION}-tk" && \
+    apt-get install --yes --no-install-recommends "python${PYTHON_VERSION}" "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" "python${PYTHON_VERSION}-tk" "python${PYTHON_VERSION}}-pip" && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
-# Set up Python and pip
+# Set up Python (alias python3 -> python)
 RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
     rm /usr/bin/python3 && \
-    ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python get-pip.py
+    ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3
 
 # Clean up to reduce image size
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-# Install comfy-cli
-RUN pip install comfy-cli
-# JupyterLab and other python packages
-RUN pip install --no-cache-dir jupyterlab jupyter-archive nbformat \
+# Install comfy-cli JupyterLab and other python packages
+RUN pip install --no-cache-dir comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare \
     requests python-dotenv nvitop gdown && \
     pip install --no-cache-dir "numpy<2" && \
@@ -53,18 +49,6 @@ RUN ln -s /etc/nginx/sites-available/nginx_comfyui_conf.conf /etc/nginx/sites-en
 
 # Install ComfyUI
 RUN /usr/bin/yes | comfy --workspace /notebooks/ComfyUI install --cuda-version 12.4 --nvidia
-
-# restore snapshot
-
-WORKDIR /comfyui_setup_temp
-
-COPY src/snapshot.json .
-
-RUN comfy --workspace /notebooks/ComfyUI node restore-snapshot snapshot.json --pip-non-url
-
-# installing ReActor
-WORKDIR /notebooks/ComfyUI/custom_nodes
-RUN git clone https://github.com/Gourieff/ComfyUI-ReActor.git && cd ComfyUI-ReActor && python install.py
 
 WORKDIR /notebooks
 
