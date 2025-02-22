@@ -73,12 +73,12 @@ run_custom_script() {
 
 echo "Pod Started"
 configure_dns
+start_nginx
+start_jupyter
 run_custom_script
 export_env_vars
 make_directory
 download_notebooks
 download_model
-start_nginx
-start_jupyter
 echo "Start script(s) finished, pod is ready to use."
 sleep infinity
