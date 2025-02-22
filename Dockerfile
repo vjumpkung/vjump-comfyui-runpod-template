@@ -14,12 +14,12 @@ ENV PYTHONUNBUFFERED=1
 ENV CMAKE_BUILD_PARALLEL_LEVEL=8
 
 # create notebooks dir
-RUN mkdir -p /notebooks /comfyui_setup_temp
+RUN mkdir -p /notebooks /comfyui_setup_temp /etc/nginx/sites-available/
 
 # Install Python, git and other necessary tools
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 RUN apt-get update --yes && \
-    apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common&& \
+    apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common nginx&& \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --yes && \
     apt-get install --yes --no-install-recommends "python${PYTHON_VERSION}" "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" "python${PYTHON_VERSION}-tk" && \
@@ -46,6 +46,10 @@ RUN pip install --no-cache-dir jupyterlab jupyter-archive nbformat \
     requests python-dotenv nvitop gdown && \
     pip install --no-cache-dir "numpy<2" && \
     pip cache purge
+
+# Copy reverse proxy config
+COPY src/nginx_comfyui_conf.conf /etc/nginx/sites-available/
+RUN ln -s /etc/nginx/sites-available/nginx_comfyui_conf.conf /etc/nginx/sites-enabled/
 
 # Install ComfyUI
 RUN /usr/bin/yes | comfy --workspace /notebooks/ComfyUI install --cuda-version 12.4 --nvidia --version 0.3.14

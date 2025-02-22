@@ -2,6 +2,10 @@
 
 export PLATFORM_ID="RUNPOD"
 
+start_nginx() {
+    service nginx start
+}
+
 configure_dns() {
     echo "Configuring DNS settings..."
     # Backup the current resolv.conf
@@ -67,12 +71,13 @@ run_custom_script() {
 }
 
 echo "Pod Started"
-start_jupyter
-configure_dns
 run_custom_script
+configure_dns
 export_env_vars
 make_directory
 download_notebooks
 download_model
+start_nginx
+start_jupyter
 echo "Start script(s) finished, pod is ready to use."
 sleep infinity
