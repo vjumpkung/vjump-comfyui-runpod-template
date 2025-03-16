@@ -1,7 +1,7 @@
 # Stage 1: Base image with common dependencies
-FROM nvidia/cuda:12.4.1-base-ubuntu20.04 as base
+FROM nvidia/cuda:12.4.1-base-ubuntu22.04 as base
 
-ARG PYTHON_VERSION="3.10"
+ARG PYTHON_VERSION="3.12"
 ARG CONTAINER_TIMEZONE=UTC 
 
 # Prevents prompts from packages asking for user input during installation
