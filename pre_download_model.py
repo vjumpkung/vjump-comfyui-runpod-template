@@ -23,8 +23,7 @@ def main(args):
             print("no download url provided")
             return
     except:
-        print("no download url provided")
-        return
+        exit(1)
 
 
 if __name__ == "__main__":

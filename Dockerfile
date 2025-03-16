@@ -1,7 +1,7 @@
 # Stage 1: Base image with common dependencies
-FROM nvidia/cuda:12.4.1-base-ubuntu22.04 as base
+FROM nvidia/cuda:12.4.1-base-ubuntu20.04 as base
 
-ARG PYTHON_VERSION="3.12"
+ARG PYTHON_VERSION="3.10"
 ARG CONTAINER_TIMEZONE=UTC 
 
 # Prevents prompts from packages asking for user input during installation
@@ -42,8 +42,7 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 # Install comfy-cli JupyterLab and other python packages
 RUN pip install --no-cache-dir comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare \
-    requests python-dotenv nvitop gdown && \
-    pip install --no-cache-dir "numpy<2" && \
+    requests python-dotenv nvitop gdown "numpy<2" && \
     pip cache purge
 
 # Copy reverse proxy config
@@ -70,7 +69,7 @@ COPY src/extra_model_paths.yaml .
 
 WORKDIR /notebooks
 
-EXPOSE 8188 8888
+EXPOSE 8188 8888 3001
 CMD ["jupyter", "lab", "--allow-root", "--ip=0.0.0.0", "--no-browser", \
     "--ServerApp.trust_xheaders=True", "--ServerApp.disable_check_xsrf=False", \
     "--ServerApp.allow_remote_access=True", "--ServerApp.allow_origin='*'", \
