@@ -1,6 +1,7 @@
 #!/bin/bash
 export BRANCH_ID=${BRANCH_ID:-main}
 export PLATFORM_ID="RUNPOD"
+export TORCH_FORCE_WEIGHTS_ONLY_LOAD=1
 
 start_nginx() {
     echo "Start NGINX"
@@ -19,10 +20,12 @@ nameserver 8.8.4.4" >/etc/resolv.conf
 
 # Download notebooks
 download_notebooks() {
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
+    echo Updating Notebook...
+    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
+    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
+    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
+    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
+    echo Update Nobebook Completed.
 }
 
 download_model() {
@@ -68,17 +71,17 @@ make_directory() {
 }
 
 run_custom_script() {
-    curl https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/custom_script.sh -sSf | bash -s -- -y
+    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/custom_script.sh -sSf | bash -s -- -y
 }
 
 echo "Pod Started"
 configure_dns
 start_nginx
+start_jupyter
 export_env_vars
 download_notebooks
 make_directory
 run_custom_script
 download_model
-start_jupyter
 echo "Start script(s) finished, pod is ready to use."
 sleep infinity
