@@ -19,7 +19,7 @@ RUN mkdir -p /notebooks
 # Install Python, git and other necessary tools
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 RUN apt-get update --yes && \
-    apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common nginx&& \
+    apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common nginx ffmpeg && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --yes && \
     apt-get install --yes --no-install-recommends "python${PYTHON_VERSION}" "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" "python${PYTHON_VERSION}-tk" && \
@@ -42,7 +42,7 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 # Install comfy-cli JupyterLab and other python packages
 RUN pip install --no-cache-dir comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare \
-    requests python-dotenv nvitop gdown "numpy<2" && \
+    requests python-dotenv nvitop gdown "numpy<2" sageattention imageio-ffmpeg && \
     pip cache purge
 
 # Copy reverse proxy config
