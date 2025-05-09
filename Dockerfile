@@ -66,11 +66,13 @@ RUN ln -s /etc/nginx/sites-available/nginx_comfyui_conf.conf /etc/nginx/sites-en
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
 WORKDIR /notebooks/ComfyUI
-
-RUN cd ./custom_nodes && git clone https://github.com/Comfy-Org/ComfyUI-Manager.git
+RUN uv pip install --system torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
 RUN uv pip install --system -r https://raw.githubusercontent.com/comfyanonymous/ComfyUI/refs/heads/master/requirements.txt
 RUN uv pip install --system -r https://raw.githubusercontent.com/Comfy-Org/ComfyUI-Manager/refs/heads/main/requirements.txt
-RUN uv pip install --system torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+RUN uv cache clean
+
+WORKDIR /notebooks/ComfyUI/custom_nodes
+RUN git clone https://github.com/Comfy-Org/ComfyUI-Manager.git
 
 WORKDIR /notebooks
 
