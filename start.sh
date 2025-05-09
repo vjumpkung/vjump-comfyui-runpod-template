@@ -39,7 +39,7 @@ download_model() {
 # Start jupyter lab
 start_jupyter() {
     echo "Starting Jupyter Lab..."
-    cd /invokeai/ &&
+    cd /notebooks/ &&
         nohup jupyter lab \
             --allow-root \
             --ip=0.0.0.0 \
@@ -51,7 +51,7 @@ start_jupyter() {
             --ServerApp.allow_credentials=True \
             --FileContentsManager.delete_to_trash=False \
             --FileContentsManager.always_delete_dir=True \
-            --FileContentsManager.preferred_dir=/invokeai \
+            --FileContentsManager.preferred_dir=/notebooks \
             --ContentsManager.allow_hidden=True \
             --LabServerApp.copy_absolute_path=True \
             --ServerApp.token='' \
