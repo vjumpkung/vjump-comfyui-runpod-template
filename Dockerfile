@@ -63,6 +63,7 @@ COPY src/nginx_comfyui_conf.conf /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/nginx_comfyui_conf.conf /etc/nginx/sites-enabled/
 
 # Install ComfyUI
+WORKDIR /notebooks
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
 WORKDIR /notebooks/ComfyUI
