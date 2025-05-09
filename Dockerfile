@@ -35,15 +35,28 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python get-pip.py
 
+# add uv
+
+# The installer requires curl (and certificates) to download the release archive
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
+
+# Download the latest installer
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
+
+# Run the installer then remove it
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+
+# Ensure the installed binary is on the `PATH`
+ENV PATH="/root/.local/bin/:$PATH"
 
 # Clean up to reduce image size
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install comfy-cli JupyterLab and other python packages
-RUN pip install --no-cache-dir comfy-cli jupyterlab jupyter-archive nbformat \
+RUN uv pip install comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare \
     requests python-dotenv nvitop gdown "numpy<2" sageattention imageio-ffmpeg && \
-    pip cache purge
+    uv cache clean
 
 # Copy reverse proxy config
 COPY src/nginx_comfyui_conf.conf /etc/nginx/sites-available/
@@ -62,6 +75,11 @@ COPY start.sh .
 COPY pre_download_model.py .
 COPY ui/. ./ui/
 COPY src/. ./src/
+
+# copy config.ini
+RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
+
+COPY src/config.ini user/default/ComfyUI-Manager/
 
 WORKDIR /notebooks/ComfyUI
 
