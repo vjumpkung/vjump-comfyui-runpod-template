@@ -1,5 +1,5 @@
 # Stage 1: Base image with common dependencies
-FROM nvidia/cuda:12.4.1-base-ubuntu22.04 as base
+FROM nvidia/cuda:12.6.3-base-ubuntu24.04 as base
 
 ARG PYTHON_VERSION="3.12"
 ARG CONTAINER_TIMEZONE=UTC 
@@ -53,7 +53,7 @@ ENV PATH="/root/.local/bin/:$PATH"
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install comfy-cli JupyterLab and other python packages
-RUN uv pip install comfy-cli jupyterlab jupyter-archive nbformat \
+RUN uv pip install --system comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare \
     requests python-dotenv nvitop gdown "numpy<2" sageattention imageio-ffmpeg && \
     uv cache clean
@@ -63,7 +63,7 @@ COPY src/nginx_comfyui_conf.conf /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/nginx_comfyui_conf.conf /etc/nginx/sites-enabled/
 
 # Install ComfyUI
-RUN /usr/bin/yes | comfy --workspace /notebooks/ComfyUI install --cuda-version 12.4 --nvidia
+RUN /usr/bin/yes | comfy --workspace /notebooks/ComfyUI install --cuda-version 12.6 --nvidia
 
 WORKDIR /notebooks
 
