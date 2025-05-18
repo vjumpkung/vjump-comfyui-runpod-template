@@ -89,7 +89,7 @@ COPY src/. ./src/
 # copy config.ini
 RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
 
-COPY src/config.ini user/default/ComfyUI-Manager/
+COPY src/config.ini ./ComfyUI/user/default/ComfyUI-Manager/
 
 WORKDIR /notebooks/ComfyUI
 
