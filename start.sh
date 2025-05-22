@@ -3,6 +3,15 @@ export BRANCH_ID=${BRANCH_ID:-main}
 export PLATFORM_ID="RUNPOD"
 export TORCH_FORCE_WEIGHTS_ONLY_LOAD=1
 
+export PORT=8000
+export HOST=0.0.0.0
+export UI_TYPE=COMFY
+export PROGRAM_PATH=
+export RESOURCE_PATH="/notebooks/my-runpod-volume/models"
+export LOG_PATH="./backend.log"
+export PROGRAM_LOG="/notebooks/comfy.log"
+export JUPYTER_LAB_PORT=8888
+
 start_nginx() {
     echo "Start NGINX"
     service nginx start
@@ -21,7 +30,7 @@ nameserver 8.8.4.4" >/etc/resolv.conf
 # Download notebooks
 download_notebooks() {
     echo Updating Notebook...
-    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
+    # curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
     curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
     curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
     curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
@@ -59,6 +68,21 @@ start_jupyter() {
     echo "Jupyter Lab started"
 }
 
+start_comfyui() {
+    echo "Starting ComfyUI..."
+    cd /notebooks/ComfyUI && nohup python -u main.py \ 
+    --listen 0.0.0.0 \ 
+    --disable-auto-launch \ 
+    --output-directory /notebooks/output_images/ >>/notebooks/comfy.log 2>&1 &
+    echo "ComfyUI Started"
+}
+
+start_backend() {
+    echo "Starting Resource Manager WebUI..."
+    cd /notebooks/program/vjumpkung-sd-ui-manager-backend && nohup python main.py &>/notebooks/backend.log &
+    echo "Resource Manager WebUI Started"
+}
+
 # Export env vars
 export_env_vars() {
     echo "Exporting environment variables..."
@@ -77,7 +101,9 @@ run_custom_script() {
 echo "Pod Started"
 configure_dns
 start_nginx
+start_backend
 start_jupyter
+start_comfyui
 export_env_vars
 download_notebooks
 make_directory

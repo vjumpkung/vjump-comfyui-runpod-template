@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED=1
 ENV CMAKE_BUILD_PARALLEL_LEVEL=8
 
 # create notebooks dir
-RUN mkdir -p /notebooks
+RUN mkdir -p /notebooks /notebooks/program/
 
 # Install Python, git and other necessary tools
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
@@ -54,7 +54,7 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install comfy-cli JupyterLab and other python packages
 RUN uv pip install --system comfy-cli jupyterlab jupyter-archive nbformat \
-    jupyterlab-git ipywidgets ipykernel ipython pickleshare \
+    jupyterlab-git ipywidgets ipykernel ipython pickleshare "aiofiles==24.1.0" "httpx==0.28.1" python-dotenv uvicorn "rich==14.0.0" \
     requests python-dotenv nvitop gdown "numpy<2" sageattention imageio-ffmpeg && \
     uv cache clean
 
@@ -80,7 +80,7 @@ WORKDIR /notebooks
 RUN mkdir -p ./src/ ./ui/
 
 COPY resource_manager.ipynb .
-COPY start_comfyui_here.ipynb .
+# COPY start_comfyui_here.ipynb .
 COPY start.sh .
 COPY pre_download_model.py .
 COPY ui/. ./ui/
@@ -91,13 +91,21 @@ RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
 
 COPY src/config.ini ./ComfyUI/user/default/ComfyUI-Manager/
 
+# copy extra path
+
 WORKDIR /notebooks/ComfyUI
 
 COPY src/extra_model_paths.yaml .
 
+# clone model manager
+
+WORKDIR /notebooks/program/
+
+RUN git clone https://github.com/vjumpkung/vjumpkung-sd-ui-manager-backend.git
+
 WORKDIR /notebooks
 
-EXPOSE 8188 8888 3001
+EXPOSE 8188 8888 3001 8000
 CMD ["jupyter", "lab", "--allow-root", "--ip=0.0.0.0", "--no-browser", \
     "--ServerApp.trust_xheaders=True", "--ServerApp.disable_check_xsrf=False", \
     "--ServerApp.allow_remote_access=True", "--ServerApp.allow_origin='*'", \
