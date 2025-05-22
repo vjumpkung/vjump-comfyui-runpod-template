@@ -104,7 +104,12 @@ run_custom_script() {
     curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/custom_script.sh -sSf | bash -s -- -y
 }
 
-echo "Pod Started"
+print_nvidia_gpu() {
+    cd /notebooks/ && /bin/bash gpu_info.sh --full
+    cd /notebooks/ && /bin/bash gpu_info.sh --full >>$PROGRAM_LOG
+}
+
+print_nvidia_gpu
 touch_file
 configure_dns
 update_backend
