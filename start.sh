@@ -105,20 +105,19 @@ run_custom_script() {
 }
 
 print_nvidia_gpu() {
-    cd /notebooks/ && /bin/bash gpu_info.sh --full
-    cd /notebooks/ && /bin/bash gpu_info.sh --full >>$PROGRAM_LOG
+    cd /notebooks/ && /bin/bash gpu_info.sh >>$PROGRAM_LOG
 }
 
-print_nvidia_gpu
+make_directory
+export_env_vars
 touch_file
+print_nvidia_gpu
 configure_dns
 update_backend
 start_nginx
 start_backend
 start_jupyter
-export_env_vars
 download_notebooks
-make_directory
 run_custom_script
 start_comfyui
 download_model

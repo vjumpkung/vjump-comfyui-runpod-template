@@ -54,8 +54,7 @@ get_gpu_names() {
 
 # Function to extract CUDA version
 get_cuda_version() {
-    nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits 2>/dev/null | head -1
-    # Alternative method for CUDA version from nvidia-smi output
+    # Extract CUDA version from nvidia-smi output
     local cuda_version=$(nvidia-smi 2>/dev/null | grep -oP "CUDA Version: \K[0-9]+\.[0-9]+")
     if [[ -n "$cuda_version" ]]; then
         echo "$cuda_version"
@@ -127,9 +126,7 @@ main() {
 
     # Optional: Show brief nvidia-smi summary
     if [[ "$1" == "--full" ]] || [[ "$1" == "-f" ]]; then
-        echo
-        print_header "NVIDIA-SMI OUTPUT"
-        nvidia-smi --query-gpu=index,name,memory.used,memory.total,utilization.gpu,temperature.gpu --format=table
+        nvidia-smi
     fi
 
     echo
