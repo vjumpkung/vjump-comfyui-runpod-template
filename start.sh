@@ -70,10 +70,7 @@ start_jupyter() {
 
 start_comfyui() {
     echo "Starting ComfyUI..."
-    cd /notebooks/ComfyUI && nohup python -u main.py \ 
-    --listen 0.0.0.0 \ 
-    --disable-auto-launch \ 
-    --output-directory /notebooks/output_images/ >>/notebooks/comfy.log 2>&1 &
+    cd /notebooks/ComfyUI && nohup python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ >>/notebooks/comfy.log 2>&1 &
     echo "ComfyUI Started"
 }
 
