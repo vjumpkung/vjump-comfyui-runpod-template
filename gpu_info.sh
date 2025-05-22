@@ -14,12 +14,12 @@ WHITE='\033[1;37m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
 
-# Unicode symbols
-GPU_ICON="🖥️"
-CUDA_ICON="⚡"
-CHECK_MARK="✅"
-CROSS_MARK="❌"
-SEPARATOR="━"
+# ASCII symbols
+GPU_ICON="[GPU]"
+CUDA_ICON="[CUDA]"
+CHECK_MARK="[OK]"
+CROSS_MARK="[ERROR]"
+SEPARATOR="="
 
 # Function to print a fancy header
 print_header() {
@@ -95,7 +95,7 @@ main() {
     fi
 
     # Display GPU count
-    print_info "🔢" "GPU Count" "$gpu_count" "$GREEN"
+    print_info "[COUNT]" "GPU Count" "$gpu_count" "$GREEN"
     echo
 
     # Display each GPU
@@ -118,7 +118,7 @@ main() {
 
     # Display driver version
     if [[ -n "$driver_version" ]]; then
-        print_info "🔧" "Driver Version" "$driver_version" "$BLUE"
+        print_info "[DRIVER]" "Driver Version" "$driver_version" "$BLUE"
     fi
 
     # Success message
