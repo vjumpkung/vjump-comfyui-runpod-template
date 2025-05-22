@@ -54,7 +54,7 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install comfy-cli JupyterLab and other python packages
 RUN uv pip install --system comfy-cli jupyterlab jupyter-archive nbformat \
-    jupyterlab-git ipywidgets ipykernel ipython pickleshare "aiofiles==24.1.0" "httpx==0.28.1" python-dotenv uvicorn "rich==14.0.0" \
+    jupyterlab-git ipywidgets ipykernel ipython pickleshare "aiofiles==24.1.0" "httpx==0.28.1" python-dotenv uvicorn "rich==14.0.0" fastapi websockets \
     requests python-dotenv nvitop gdown "numpy<2" sageattention imageio-ffmpeg && \
     uv cache clean
 
