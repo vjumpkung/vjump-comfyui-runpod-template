@@ -12,6 +12,11 @@ export LOG_PATH="/notebooks/backend.log"
 export PROGRAM_LOG="/notebooks/comfy.log"
 export JUPYTER_LAB_PORT="8888"
 
+touch_file() {
+    touch $LOG_PATH
+    touch $PROGRAM_LOG
+}
+
 start_nginx() {
     echo "Start NGINX"
     service nginx start
@@ -31,9 +36,9 @@ nameserver 8.8.4.4" >/etc/resolv.conf
 download_notebooks() {
     echo Updating Notebook...
     # curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
-    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
-    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
-    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
+    cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
+    cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
+    cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
     echo Update Nobebook Completed.
 }
 
@@ -100,6 +105,7 @@ run_custom_script() {
 }
 
 echo "Pod Started"
+touch_file
 configure_dns
 update_backend
 start_nginx
