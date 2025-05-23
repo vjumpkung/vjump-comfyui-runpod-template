@@ -7,10 +7,11 @@ export PORT=8000
 export HOST="0.0.0.0"
 export UI_TYPE="COMFY"
 export PROGRAM_PATH=
-export RESOURCE_PATH="/notebooks/my-runpod-volume/models"
-export LOG_PATH="/notebooks/backend.log"
-export PROGRAM_LOG="/notebooks/comfy.log"
-export JUPYTER_LAB_PORT="8888"
+export RESOURCE_PATH=${RESOURCE_PATH:-"/notebooks/my-runpod-volume/models"}
+export LOG_PATH=${LOG_PATH:-"/notebooks/backend.log"}
+export PROGRAM_LOG=${PROGRAM_LOG:-"/notebooks/comfy.log"}
+export JUPYTER_LAB_PORT=${JUPYTER_LAB_PORT:-"8888"}
+export OUTPUT_PATH=${OUTPUT_PATH:-"/notebooks/output_images"}
 
 touch_file() {
     touch $LOG_PATH
@@ -97,7 +98,9 @@ export_env_vars() {
 }
 
 make_directory() {
-    mkdir -p /notebooks/my-runpod-volume/models/{ultralytics_bbox,CatVTON,LLM,animatediff_models,animatediff_motion_lora,ckpts,clip,clip_vision,configs,controlnet,diffusers,diffusion_models,embeddings,facedetection,facerestore_models,gligen,grounding-dino,hypernetworks,insightface,ipadapter,loras,mmdets,nsfw_detector,onnx,photomaker,reactor,rembg,reswapper,sam2,sams,style_models,text_encoders,ultralytics,unet,upscale_models,vae,vae_approx}
+    echo "create directory at $RESOURCE_PATH and output path at $OUTPUT_PATH"
+    mkdir -p $RESOURCE_PATH/{ultralytics_bbox,CatVTON,LLM,animatediff_models,animatediff_motion_lora,ckpts,clip,clip_vision,configs,controlnet,diffusers,diffusion_models,embeddings,facedetection,facerestore_models,gligen,grounding-dino,hypernetworks,insightface,ipadapter,loras,mmdets,nsfw_detector,onnx,photomaker,reactor,rembg,reswapper,sam2,sams,style_models,text_encoders,ultralytics,unet,upscale_models,vae,vae_approx}
+    mkdir -p $OUTPUT_PATH
 }
 
 run_custom_script() {
