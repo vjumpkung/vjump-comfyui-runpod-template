@@ -120,9 +120,9 @@ update_backend
 start_nginx
 start_backend
 start_jupyter
+download_model
 download_notebooks
 run_custom_script
 start_comfyui
-download_model
 echo "Start script(s) finished, pod is ready to use."
 sleep infinity
