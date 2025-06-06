@@ -51,6 +51,7 @@ download_model() {
     if [[ -z $PRE_DOWNLOAD_MODEL_URL ]]; then
         echo "No PRE_DOWNLOAD_MODEL_URL provided skip download"
     else
+        cd /notebooks/
         python pre_download_model.py --input $PRE_DOWNLOAD_MODEL_URL
     fi
 }
