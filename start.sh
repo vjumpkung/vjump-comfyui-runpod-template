@@ -49,10 +49,10 @@ update_backend() {
 
 download_model() {
     if [[ -z $PRE_DOWNLOAD_MODEL_URL ]]; then
-        echo "No PRE_DOWNLOAD_MODEL_URL provided skip download"
+        echo "No PRE_DOWNLOAD_MODEL_URL provided skip download" | tee -a $PROGRAM_LOG
     else
         cd /notebooks/
-        python pre_download_model.py --input $PRE_DOWNLOAD_MODEL_URL
+        python pre_download_model.py --input $PRE_DOWNLOAD_MODEL_URL | tee -a $PROGRAM_LOG
     fi
 }
 
@@ -81,14 +81,14 @@ start_jupyter() {
 
 start_comfyui() {
     echo "Starting ComfyUI..."
-    cd /notebooks/ComfyUI && nohup python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ >>$PROGRAM_LOG 2>&1 &
+    cd /notebooks/ComfyUI && nohup python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ | tee -a $PROGRAM_LOG 2>&1 &
     echo "ComfyUI Started"
 }
 
 start_backend() {
-    echo "Starting Resource Manager WebUI..."
-    cd /notebooks/program/vjumpkung-sd-ui-manager-backend && nohup python main.py &>$LOG_PATH &
-    echo "Resource Manager WebUI Started"
+    echo "Starting Resource Manager WebUI..." | tee -a $PROGRAM_LOG
+    cd /notebooks/program/vjumpkung-sd-ui-manager-backend && nohup python main.py | tee -a $LOG_PATH &
+    echo "Resource Manager WebUI Started" | tee -a $PROGRAM_LOG
 }
 
 # Export env vars
@@ -99,17 +99,17 @@ export_env_vars() {
 }
 
 make_directory() {
-    echo "create directory at $RESOURCE_PATH and output path at $OUTPUT_PATH"
+    echo "create directory at $RESOURCE_PATH and output path at $OUTPUT_PATH" | tee -a $PROGRAM_LOG
     mkdir -p $RESOURCE_PATH/{ultralytics_bbox,CatVTON,LLM,animatediff_models,animatediff_motion_lora,ckpts,clip,clip_vision,configs,controlnet,diffusers,diffusion_models,embeddings,facedetection,facerestore_models,gligen,grounding-dino,hypernetworks,insightface,ipadapter,loras,mmdets,nsfw_detector,onnx,photomaker,reactor,rembg,reswapper,sam2,sams,style_models,text_encoders,ultralytics,unet,upscale_models,vae,vae_approx}
     mkdir -p $OUTPUT_PATH
 }
 
 run_custom_script() {
-    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/custom_script.sh -sSf | bash -s -- -y
+    curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/custom_script.sh -sSf | bash -s -- -y | tee -a $PROGRAM_LOG
 }
 
 print_nvidia_gpu() {
-    cd /notebooks/ && /bin/bash gpu_info.sh >>$PROGRAM_LOG
+    cd /notebooks/ && /bin/bash gpu_info.sh | tee -a $PROGRAM_LOG
 }
 
 make_directory

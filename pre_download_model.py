@@ -15,15 +15,23 @@ PORT = os.getenv("PORT") or "8000"
 def main(args):
     url = args.input
     try:
+
+        print("check connection...")
+
+        isSuccess = False
         
-        while True:
+        for i in range(10):
             time.sleep(0.5)
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = sock.connect_ex(('127.0.0.1', PORT))
+            result = sock.connect_ex(("127.0.0.1", int(PORT)))
             if result == 0:
+                isSuccess = True
                 break
             sock.close()
-        
+
+        if not isSuccess:
+            raise
+
         if url:
             r2 = requests.post(
                 f"http://localhost:{PORT}/api/download_selected",
@@ -37,8 +45,8 @@ def main(args):
         else:
             print("no download url provided")
             return
-    except Exception:
-        print(Exception)
+    except Exception as e:
+        print(str(e))
         exit(1)
 
 
