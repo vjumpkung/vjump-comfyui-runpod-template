@@ -4,6 +4,9 @@ import os
 import dotenv
 import requests
 
+import time
+import socket
+
 dotenv.load_dotenv(override=True)
 
 PORT = os.getenv("PORT") or "8000"
@@ -12,6 +15,15 @@ PORT = os.getenv("PORT") or "8000"
 def main(args):
     url = args.input
     try:
+        
+        while True:
+            time.sleep(0.5)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            result = sock.connect_ex(('127.0.0.1', PORT))
+            if result == 0:
+                break
+            sock.close()
+        
         if url:
             r2 = requests.post(
                 f"http://localhost:{PORT}/api/download_selected",
@@ -19,13 +31,14 @@ def main(args):
             )
 
             if r2.status_code == 200:
-                print("Pre-Download Model Complete")
+                print("Sending Pre-Download Model List into Queue")
             else:
                 raise
         else:
             print("no download url provided")
             return
-    except:
+    except Exception:
+        print(Exception)
         exit(1)
 
 
