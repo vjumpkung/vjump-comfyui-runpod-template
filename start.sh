@@ -83,7 +83,7 @@ start_jupyter() {
 
 start_comfyui() {
     echo "Starting ComfyUI..."
-    /bin/bash /notebooks/start_process.sh &
+    /bin/bash /notebooks/start_process.sh
     echo "ComfyUI Started"
 }
 
