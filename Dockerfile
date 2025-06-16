@@ -86,6 +86,7 @@ COPY gpu_info.sh .
 COPY start_process.sh .
 COPY stop_process.sh .
 COPY pre_download_model.py .
+COPY cf_tunnel.py .
 COPY ui/. ./ui/
 COPY src/. ./src/
 

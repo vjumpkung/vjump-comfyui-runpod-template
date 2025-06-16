@@ -5,6 +5,7 @@ export TORCH_FORCE_WEIGHTS_ONLY_LOAD=0
 export PYTORCH_ENABLE_UNSAFE_LOAD=1
 
 export PORT=8000
+export COMFY_PORT=8188
 export HOST="0.0.0.0"
 export UI_TYPE="COMFY"
 export PROGRAM_PATH=
@@ -113,6 +114,10 @@ run_custom_script() {
 
 print_nvidia_gpu() {
     cd /notebooks/ && /bin/bash gpu_info.sh | tee -a $PROGRAM_LOG
+}
+
+run_cf_tunnel() {
+    cd /notebooks/ && python cf_tunnel.py $PORT $COMFY_PORT 8888
 }
 
 make_directory
