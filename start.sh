@@ -117,7 +117,7 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
-    cd /notebooks/ && python cf_tunnel.py $PORT $COMFY_PORT 8888
+    cd /notebooks/ && python cf_tunnel.py $PORT $COMFY_PORT 8888 | tee -a $LOG_PATH &
 }
 
 make_directory
@@ -133,5 +133,6 @@ download_model
 download_notebooks
 run_custom_script
 start_comfyui
+run_cf_tunnel
 echo "Start script(s) finished, pod is ready to use."
 sleep infinity
