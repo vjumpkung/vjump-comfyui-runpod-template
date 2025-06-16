@@ -117,7 +117,7 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
-    wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+    wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -O cloudflared-linux-amd64.deb
     dpkg -i cloudflared-linux-amd64.deb
     cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT 8888 | tee -a $LOG_PATH &
 }
@@ -127,7 +127,6 @@ export_env_vars
 touch_file
 print_nvidia_gpu
 configure_dns
-run_cf_tunnel
 update_backend
 start_nginx
 start_backend
@@ -136,6 +135,6 @@ download_model
 download_notebooks
 run_custom_script
 start_comfyui
-
 echo "Start script(s) finished, pod is ready to use."
+run_cf_tunnel
 sleep infinity
