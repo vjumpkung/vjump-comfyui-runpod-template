@@ -91,7 +91,7 @@ start_comfyui() {
 
 start_backend() {
     echo "Starting Resource Manager WebUI..." | tee -a $PROGRAM_LOG
-    cd /notebooks/program/vjumpkung-sd-ui-manager-backend && nohup python main.py >>$LOG_PATH
+    cd /notebooks/program/vjumpkung-sd-ui-manager-backend && nohup python main.py >>$LOG_PATH &
     echo "Resource Manager WebUI Started" | tee -a $PROGRAM_LOG
 }
 
