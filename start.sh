@@ -117,7 +117,7 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
-    cd /notebooks/ && python cf_tunnel.py $PORT $COMFY_PORT 8888 | tee -a $LOG_PATH &
+    cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT 8888 | tee -a $LOG_PATH &
 }
 
 make_directory
