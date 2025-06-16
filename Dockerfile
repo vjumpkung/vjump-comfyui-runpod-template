@@ -17,7 +17,7 @@ ENV CMAKE_BUILD_PARALLEL_LEVEL=8
 RUN mkdir -p /notebooks /notebooks/program/
 
 RUN wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
-RUN !dpkg -i cloudflared-linux-amd64.deb 
+RUN dpkg -i cloudflared-linux-amd64.deb 
 
 # Install Python, git and other necessary tools
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
