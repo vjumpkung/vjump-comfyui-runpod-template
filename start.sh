@@ -85,8 +85,8 @@ start_jupyter() {
 
 start_comfyui() {
     echo "Starting ComfyUI..."
-    /bin/bash /notebooks/start_process.sh
-    echo "ComfyUI Started"
+    /bin/bash /notebooks/start_process.sh >> $PROGRAM_LOG
+    echo "ComfyUI Started" >> $PROGRAM_LOG
 }
 
 start_backend() {
@@ -128,6 +128,7 @@ touch_file
 print_nvidia_gpu
 configure_dns
 update_backend
+run_cf_tunnel
 start_nginx
 start_backend
 start_jupyter
@@ -135,6 +136,4 @@ download_model
 download_notebooks
 run_custom_script
 start_comfyui
-echo "Start script(s) finished, pod is ready to use."
-run_cf_tunnel
 sleep infinity
