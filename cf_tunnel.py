@@ -63,7 +63,7 @@ def start_tunnel(port):
                 url_match = re.search(r"https://[^\s]+\.trycloudflare\.com", line)
                 if url_match:
                     tunnel_url = url_match.group(0)
-                    print(f"{tunnel_url}")
+                    print(f"PORT : {port} URL : {tunnel_url}")
                     return process
 
     except Exception as e:
