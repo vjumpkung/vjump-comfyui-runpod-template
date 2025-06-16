@@ -47,15 +47,15 @@ def start_tunnel(port):
         )
 
         # Read output to find tunnel URL
-        for line in iter(process.stdout.readline, ""):
-            # Look for tunnel URL in output
-            if "trycloudflare.com" in line or "https://" in line:
-                # Extract URL using regex
-                url_match = re.search(r"https://[^\s]+\.trycloudflare\.com", line)
-                if url_match:
-                    tunnel_url = url_match.group(0)
-                    print(f"{tunnel_url}")
-                    return process
+        # for line in iter(process.stdout.readline, ""):
+        #     # Look for tunnel URL in output
+        #     if "trycloudflare.com" in line or "https://" in line:
+        #         # Extract URL using regex
+        #         url_match = re.search(r"https://[^\s]+\.trycloudflare\.com", line)
+        #         if url_match:
+        #             tunnel_url = url_match.group(0)
+        #             print(f"{tunnel_url}")
+        #             return process
 
         # If no URL found in stdout, check stderr
         for line in iter(process.stderr.readline, ""):

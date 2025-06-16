@@ -117,6 +117,8 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
+    wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
+    dpkg -i cloudflared-linux-amd64.deb 
     cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT 8888 | tee -a $LOG_PATH &
 }
 
