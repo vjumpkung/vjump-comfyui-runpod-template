@@ -91,7 +91,7 @@ start_comfyui() {
 
 start_backend() {
     echo "Starting Resource Manager WebUI..." | tee -a $PROGRAM_LOG
-    cd /notebooks/program/vjumpkung-sd-ui-manager-backend && nohup python main.py | tee -a $LOG_PATH &
+    cd /notebooks/program/vjumpkung-sd-ui-manager-backend && nohup python main.py >>$LOG_PATH
     echo "Resource Manager WebUI Started" | tee -a $PROGRAM_LOG
 }
 
@@ -117,8 +117,8 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
-    wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
-    dpkg -i cloudflared-linux-amd64.deb 
+    wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+    dpkg -i cloudflared-linux-amd64.deb
     cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT 8888 | tee -a $LOG_PATH &
 }
 
