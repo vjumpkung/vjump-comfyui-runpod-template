@@ -40,7 +40,6 @@ nameserver 8.8.4.4" >/etc/resolv.conf
 # Download notebooks
 download_notebooks() {
     echo Updating Notebook...
-    # curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/start_comfyui_here.ipynb >start_comfyui_here.ipynb
     cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
     cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
     cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
@@ -114,6 +113,7 @@ run_custom_script() {
 
 print_nvidia_gpu() {
     cd /notebooks/ && /bin/bash gpu_info.sh | tee -a $PROGRAM_LOG
+    python -c "import torch; print('CUDA AVAILABLE :',torch.cuda.is_available())"
 }
 
 run_cf_tunnel() {

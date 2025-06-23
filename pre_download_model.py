@@ -19,7 +19,7 @@ def main(args):
         print("check connection...")
 
         isSuccess = False
-        
+
         for i in range(10):
             time.sleep(0.5)
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,9 +33,12 @@ def main(args):
             raise
 
         if url:
+
+            p = requests.get(url, allow_redirects=True)
+
             r2 = requests.post(
-                f"http://localhost:{PORT}/api/download_selected",
-                json=[{"name": "Model Pack", "url": url}],
+                f"http://localhost:{PORT}/api/import_models",
+                json=p.json(),
             )
 
             if r2.status_code == 200:
