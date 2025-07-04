@@ -117,9 +117,9 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
-    wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -O cloudflared-linux-amd64.deb
+    aria2c -c -s 16 -x 16 -k 1M https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared-linux-amd64.deb
     dpkg -i cloudflared-linux-amd64.deb
-    cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT 8888 | tee -a $LOG_PATH &
+    cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT $JUPYTER_LAB_PORT | tee -a $LOG_PATH &
 }
 
 make_directory
@@ -128,10 +128,10 @@ touch_file
 print_nvidia_gpu
 configure_dns
 update_backend
-run_cf_tunnel
 start_nginx
 start_backend
 start_jupyter
+run_cf_tunnel
 download_model
 download_notebooks
 run_custom_script
