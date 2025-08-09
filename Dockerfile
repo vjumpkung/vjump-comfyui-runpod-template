@@ -1,5 +1,5 @@
 # Stage 1: Base image with common dependencies
-FROM nvidia/cuda:12.4.1-base-ubuntu22.04 AS base
+FROM nvidia/cuda:12.8.1-base-ubuntu22.04 AS base
 
 ARG PYTHON_VERSION="3.12"
 ARG CONTAINER_TIMEZONE=UTC 
@@ -55,7 +55,8 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 # Install comfy-cli JupyterLab and other python packages
 RUN uv pip install --system comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare "aiofiles==24.1.0" "httpx==0.28.1" python-dotenv uvicorn "rich==14.0.0" fastapi websockets \
-    requests python-dotenv nvitop gdown onnxruntime-gpu "numpy<2" sageattention imageio-ffmpeg && \
+    requests python-dotenv nvitop gdown onnxruntime-gpu "numpy<2" imageio-ffmpeg && \ 
+    uv pip install --system https://huggingface.co/Kijai/PrecompiledWheels/resolve/main/sageattention-2.2.0-cp312-cp312-linux_x86_64.whl && \
     uv cache clean
 
 # Copy reverse proxy config
@@ -67,7 +68,7 @@ WORKDIR /notebooks
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
 WORKDIR /notebooks/ComfyUI
-RUN uv pip install --system torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+RUN uv pip install --system torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
 RUN uv pip install --system -r https://raw.githubusercontent.com/comfyanonymous/ComfyUI/refs/heads/master/requirements.txt
 RUN uv pip install --system -r https://raw.githubusercontent.com/Comfy-Org/ComfyUI-Manager/refs/heads/main/requirements.txt
 RUN uv cache clean
