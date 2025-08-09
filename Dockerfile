@@ -20,18 +20,13 @@ RUN mkdir -p /notebooks /notebooks/program/
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends build-essential aria2 git git-lfs curl wget gcc g++ bash libgl1 software-properties-common nginx ffmpeg libstdc++6 && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update --yes && \
-    apt-get install --yes --no-install-recommends "python${PYTHON_VERSION}" "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" "python${PYTHON_VERSION}-tk" && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 # Set up Python and pip
-RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
-    rm /usr/bin/python3 && \
-    ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
+RUN ln -s /usr/bin/python3 /usr/bin/python && \
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python get-pip.py
 
