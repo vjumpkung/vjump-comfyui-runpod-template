@@ -80,7 +80,7 @@ WORKDIR /notebooks
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
 WORKDIR /notebooks/ComfyUI
-RUN uv pip install torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+RUN uv pip install torch==2.9.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
 RUN uv pip install -r https://raw.githubusercontent.com/comfyanonymous/ComfyUI/refs/heads/master/requirements.txt
 RUN uv pip install -r https://raw.githubusercontent.com/Comfy-Org/ComfyUI-Manager/refs/heads/main/requirements.txt
 RUN uv cache clean
