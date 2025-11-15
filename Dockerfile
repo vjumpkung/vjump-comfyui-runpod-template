@@ -65,7 +65,7 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 # Install comfy-cli JupyterLab and other python packages (no --system needed now)
 RUN uv pip install comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare "aiofiles==24.1.0" "httpx==0.28.1" python-dotenv uvicorn "rich==14.0.0" fastapi websockets \
-    requests python-dotenv nvitop gdown onnxruntime-gpu "numpy<2" imageio-ffmpeg && \
+    requests python-dotenv nvitop gdown onnxruntime-gpu "numpy<2" imageio-ffmpeg pip && \
     uv cache clean
 
 # Copy reverse proxy config
