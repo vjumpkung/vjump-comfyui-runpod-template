@@ -65,11 +65,8 @@ RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 # Install comfy-cli JupyterLab and other python packages (no --system needed now)
 RUN uv pip install comfy-cli jupyterlab jupyter-archive nbformat \
     jupyterlab-git ipywidgets ipykernel ipython pickleshare "aiofiles==24.1.0" "httpx==0.28.1" python-dotenv uvicorn "rich==14.0.0" fastapi websockets \
-    requests python-dotenv nvitop gdown onnxruntime-gpu "numpy<2" imageio-ffmpeg && \ 
-    uv pip install sageattention && \
+    requests python-dotenv nvitop gdown onnxruntime-gpu "numpy<2" imageio-ffmpeg && \
     uv cache clean
-
-RUN uv pip install https://huggingface.co/Kijai/PrecompiledWheels/resolve/main/sageattention-2.2.0-cp312-cp312-linux_x86_64.whl
 
 # Copy reverse proxy config
 COPY src/nginx_comfyui_conf.conf /etc/nginx/sites-available/
@@ -80,7 +77,7 @@ WORKDIR /notebooks
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
 WORKDIR /notebooks/ComfyUI
-RUN uv pip install torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+RUN uv pip install torch==2.9.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
 RUN uv pip install -r https://raw.githubusercontent.com/comfyanonymous/ComfyUI/refs/heads/master/requirements.txt
 RUN uv pip install -r https://raw.githubusercontent.com/Comfy-Org/ComfyUI-Manager/refs/heads/main/requirements.txt
 RUN uv cache clean
@@ -107,6 +104,10 @@ COPY src/. ./src/
 RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
 
 COPY src/config.ini ./ComfyUI/user/default/ComfyUI-Manager/
+
+# install sageattn
+
+RUN uv pip install "./src/sageattention-2.2.0-cp312-cp312-linux_x86_64.whl"
 
 # copy extra path
 
