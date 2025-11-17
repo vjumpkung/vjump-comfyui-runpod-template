@@ -102,7 +102,7 @@ COPY src/. ./src/
 
 # install sageattn
 
-RUN uv pip install "./src/sageattention-2.2.0-cp312-cp312-linux_x86_64.whl"
+RUN uv pip install "./src/sageattention-2.2.0+cu124-cp312-cp312-linux_x86_64.whl"
 
 # copy config.ini
 RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
