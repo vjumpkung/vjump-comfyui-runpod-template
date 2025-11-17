@@ -68,8 +68,6 @@ RUN uv pip install comfy-cli jupyterlab jupyter-archive nbformat \
     requests python-dotenv nvitop gdown onnxruntime-gpu "numpy<2" imageio-ffmpeg pip && \
     uv cache clean
 
-RUN uv pip install https://huggingface.co/vjump21848/sageattention-pre-compiled-wheel/resolve/main/sageattention-2.2.0-cp312-cp312-linux_x86_64.whl
-
 # Copy reverse proxy config
 COPY src/nginx_comfyui_conf.conf /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/nginx_comfyui_conf.conf /etc/nginx/sites-enabled/
@@ -101,6 +99,8 @@ COPY pre_download_model.py .
 COPY cf_tunnel.py .
 COPY ui/. ./ui/
 COPY src/. ./src/
+
+RUN uv pip install "./src/sageattention-2.2.0+cu130-cp312-cp312-linux_x86_64.whl" && uv pip list
 
 # copy config.ini
 RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
