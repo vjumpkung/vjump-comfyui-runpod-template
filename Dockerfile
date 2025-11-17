@@ -107,7 +107,7 @@ COPY src/config.ini ./ComfyUI/user/default/ComfyUI-Manager/
 
 # install sageattn
 
-RUN uv pip install "./src/sageattention-2.2.0-cp312-cp312-linux_x86_64.whl"
+RUN uv pip install https://huggingface.co/Kijai/PrecompiledWheels/resolve/main/sageattention-2.2.0-cp312-cp312-linux_x86_64.whl
 
 # copy extra path
 
