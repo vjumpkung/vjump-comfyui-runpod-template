@@ -10,6 +10,7 @@ runpod_worker_comfy:
   configs: models/configs/
   controlnet: models/controlnet/
   diffusers: models/diffusers/
+  detection: models/detection/
   diffusion_models: models/diffusion_models/
   embeddings: models/embeddings/
   facedetection: models/facedetection/

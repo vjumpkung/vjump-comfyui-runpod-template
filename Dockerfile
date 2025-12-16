@@ -101,9 +101,9 @@ COPY ui/. ./ui/
 COPY src/. ./src/
 
 # copy config.ini
-RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
+RUN mkdir -p ./ComfyUI/user/__manager/
 
-COPY src/config.ini ./ComfyUI/user/default/ComfyUI-Manager/
+COPY src/config.ini ./ComfyUI/user/__manager/
 
 # install sageattn
 
