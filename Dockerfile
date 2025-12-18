@@ -103,9 +103,9 @@ COPY src/. ./src/
 RUN uv pip install "./src/sageattention-2.2.0+cu130-cp312-cp312-linux_x86_64.whl" && uv pip list
 
 # copy config.ini
-RUN mkdir -p ./ComfyUI/user/default/ComfyUI-Manager
+RUN mkdir -p ./ComfyUI/user/__manager/
 
-COPY src/config.ini ./ComfyUI/user/default/ComfyUI-Manager/
+COPY src/config.ini ./ComfyUI/user/__manager/
 
 # copy extra path
 
