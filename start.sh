@@ -15,7 +15,7 @@ export PROGRAM_LOG=${PROGRAM_LOG:-"/notebooks/comfy.log"}
 export JUPYTER_LAB_PORT=${JUPYTER_LAB_PORT:-"8888"}
 export OUTPUT_PATH=${OUTPUT_PATH:-"/notebooks/output_images"}
 
-export CMD=${CMD:-"python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ --enable-cors-header"}
+export CMD=${CMD:-"python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ --enable-cors-header --fast fp16_accumulation"}
 
 touch_file() {
     touch $LOG_PATH
