@@ -47,7 +47,7 @@ download_notebooks() {
 }
 
 update_backend() {
-    cd /notebooks/program/vjumpkung-sd-ui-manager-backend/ && git pull --ff-only
+    cd /notebooks/program/vjumpkung-sd-ui-manager-backend/ && git pull --ff-only && uv pip install -r requirements.txt
 }
 
 download_model() {
