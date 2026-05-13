@@ -77,10 +77,9 @@ WORKDIR /notebooks
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
 WORKDIR /notebooks/ComfyUI
-RUN uv pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
-RUN uv pip install -r https://raw.githubusercontent.com/comfyanonymous/ComfyUI/refs/heads/master/requirements.txt
-RUN uv pip install -r https://raw.githubusercontent.com/Comfy-Org/ComfyUI-Manager/refs/heads/main/requirements.txt
-RUN uv pip install "transformers<5"
+RUN uv pip install torch==2.10.0 torchvision==0.25.0 torchaudio==2.10.0 --index-url https://download.pytorch.org/whl/cu130 --no-cache-dir
+RUN uv pip install -r https://raw.githubusercontent.com/comfyanonymous/ComfyUI/refs/heads/master/requirements.txt --no-cache-dir
+RUN uv pip install -r https://raw.githubusercontent.com/Comfy-Org/ComfyUI-Manager/refs/heads/main/requirements.txt --no-cache-dir
 RUN uv cache clean
 
 WORKDIR /notebooks/ComfyUI/custom_nodes
@@ -101,7 +100,7 @@ COPY cf_tunnel.py .
 COPY ui/. ./ui/
 COPY src/. ./src/
 
-RUN uv pip install "./src/sageattention-2.2.0+cu130-cp312-cp312-linux_x86_64.whl" && uv pip list
+RUN uv pip install "./src/sageattention-2.2.0+cu130-cp312-cp312-linux_x86_64.whl" --no-cache-dir && uv pip list
 
 # copy config.ini
 RUN mkdir -p ./ComfyUI/user/__manager/
