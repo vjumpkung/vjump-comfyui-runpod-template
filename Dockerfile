@@ -1,5 +1,5 @@
 # Stage 1: Base image with common dependencies
-FROM nvidia/cuda:13.0.1-base-ubuntu24.04 AS base
+FROM nvidia/cuda:13.0.3-base-ubuntu24.04 AS base
 
 ARG PYTHON_VERSION="3.12"
 ARG CONTAINER_TIMEZONE=UTC 
@@ -100,7 +100,7 @@ COPY cf_tunnel.py .
 COPY ui/. ./ui/
 COPY src/. ./src/
 
-RUN uv pip install "./src/sageattention-2.2.0+cu130-cp312-cp312-linux_x86_64.whl" --no-cache-dir && uv pip list
+RUN uv pip install "./src/sageattention-2.2.0+cu130.torch210.sm80.86.89.120-cp312-cp312-linux_x86_64.whl" --no-cache-dir && uv pip list
 
 # copy config.ini
 RUN mkdir -p ./ComfyUI/user/__manager/
@@ -122,10 +122,4 @@ RUN git clone https://github.com/vjumpkung/vjumpkung-sd-ui-manager-backend.git
 WORKDIR /notebooks
 
 EXPOSE 8188 8888 3001 8000
-CMD ["jupyter", "lab", "--allow-root", "--ip=0.0.0.0", "--no-browser", \
-    "--ServerApp.trust_xheaders=True", "--ServerApp.disable_check_xsrf=False", \
-    "--ServerApp.allow_remote_access=True", "--ServerApp.allow_origin='*'", \
-    "--ServerApp.allow_credentials=True", "--FileContentsManager.delete_to_trash=False", \
-    "--FileContentsManager.always_delete_dir=True", "--FileContentsManager.preferred_dir=/notebooks", \
-    "--ContentsManager.allow_hidden=True", "--LabServerApp.copy_absolute_path=True", \
-    "--ServerApp.token=''", "--ServerApp.password=''"]
+CMD ["/bin/bash", "start.sh"]

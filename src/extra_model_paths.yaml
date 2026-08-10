@@ -2,6 +2,7 @@ runpod_worker_comfy:
   base_path: /notebooks/my-runpod-volume/
   CatVTON: models/CatVTON/
   LLM: models/LLM/
+  audio_encoders: models/audio_encoders/
   animatediff_models: models/animatediff_models/
   animatediff_motion_lora: models/animatediff_motion_lora/
   checkpoints: models/ckpts/
@@ -10,6 +11,7 @@ runpod_worker_comfy:
   configs: models/configs/
   controlnet: models/controlnet/
   diffusers: models/diffusers/
+  detection: models/detection/
   diffusion_models: models/diffusion_models/
   embeddings: models/embeddings/
   facedetection: models/facedetection/
@@ -21,6 +23,7 @@ runpod_worker_comfy:
   ipadapter: models/ipadapter/
   loras: models/loras/
   mmdets: models/mmdets/
+  model_patches: models/model_patches/
   nsfw_detector: models/nsfw_detector/
   onnx: models/onnx/
   photomaker: models/photomaker/
