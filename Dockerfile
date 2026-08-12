@@ -89,8 +89,6 @@ WORKDIR /notebooks
 
 RUN mkdir -p ./src/ ./ui/
 
-COPY resource_manager.ipynb .
-# COPY start_comfyui_here.ipynb .
 COPY start.sh .
 COPY gpu_info.sh .
 COPY start_process.sh .
@@ -100,7 +98,19 @@ COPY cf_tunnel.py .
 COPY ui/. ./ui/
 COPY src/. ./src/
 
-RUN uv pip install "./src/sageattention-2.2.0+cu130.torch210.sm80.86.89.120-cp312-cp312-linux_x86_64.whl" --no-cache-dir && uv pip list
+RUN uv pip install "./src/sageattention-2.2.0+cu130.torch210.sm80.86.89.120-cp312-cp312-linux_x86_64.whl" --no-cache-dir
+RUN uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.34-cu130-Basic-linux-20260331/llama_cpp_python-0.3.34+cu130.basic-cp312-cp312-linux_x86_64.whl --no-cache-dir
+RUN uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.0/flash_attn-2.8.3+cu130torch2.10-cp312-cp312-linux_x86_64.whl --no-cache-dir
+RUN uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.8.2/flash_attn_3-3.0.0+cu130torch2.10gite2743ab-cp39-abi3-linux_x86_64.whl --no-cache-dir
+RUN uv pip install --pre --index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ort-cuda-13-nightly/pypi/simple/ onnxruntime-gpu --no-cache-dir
+RUN uv pip install https://github.com/vjumpkung/vjump-runpod-notebooks-and-script/raw/refs/heads/main/trellis_2_wheels/cumesh-1.0-cp312-cp312-linux_x86_64.whl --no-cache-dir
+RUN uv pip install https://github.com/vjumpkung/vjump-runpod-notebooks-and-script/raw/refs/heads/main/trellis_2_wheels/flex_gemm-1.0.0-cp312-cp312-linux_x86_64.whl --no-cache-dir
+RUN uv pip install https://github.com/vjumpkung/vjump-runpod-notebooks-and-script/raw/refs/heads/main/trellis_2_wheels/nvdiffrast-0.4.0-cp312-cp312-linux_x86_64.whl --no-cache-dir
+RUN uv pip install https://github.com/vjumpkung/vjump-runpod-notebooks-and-script/raw/refs/heads/main/trellis_2_wheels/nvdiffrec_render-0.0.0-cp312-cp312-linux_x86_64.whl --no-cache-dir
+RUN uv pip install https://github.com/vjumpkung/vjump-runpod-notebooks-and-script/raw/refs/heads/main/trellis_2_wheels/o_voxel-0.0.1-cp312-cp312-linux_x86_64.whl --no-cache-dir
+RUN uv pip install natten==0.21.6+torch2100cu130 -f https://whl.natten.org --no-cache-dir
+RUN uv pip list
+
 
 # copy config.ini
 RUN mkdir -p ./ComfyUI/user/__manager/
