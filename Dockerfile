@@ -62,7 +62,6 @@ WORKDIR /notebooks/ComfyUI
 # BuildKit mounts, so neither download archives nor the 32 MB wheel enter the image.
 RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
     --mount=type=bind,source=src/sageattention-2.2.0+cu130.torch210.sm80.86.89.120-cp312-cp312-linux_x86_64.whl,target=/tmp/sageattention-2.2.0+cu130.torch210.sm80.86.89.120-cp312-cp312-linux_x86_64.whl \
-    --mount=type=bind,source=src/onnxruntime_gpu-1.28.0.dev20260722004-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl,target=/tmp/onnxruntime_gpu-1.28.0.dev20260722004-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl \
     uv pip install \
     comfy-cli \
     jupyterlab \
