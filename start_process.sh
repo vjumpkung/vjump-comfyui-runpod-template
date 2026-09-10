@@ -18,11 +18,11 @@ fi
 # Start the process with nohup
 echo "Starting process..."
 cd /notebooks/ComfyUI
-nohup $CMD > "$PROGRAM_LOG" 2>&1 &
+nohup $CMD > >(tee -a "$PROGRAM_LOG" > /proc/1/fd/1 2>/proc/1/fd/2) 2>&1 &
 
 # Save the PID
 echo $! > "$PID_FILE"
 echo "Process started with PID: $(cat "$PID_FILE")"
-echo "Logs are being written to $LOG_FILE"
+echo "Logs are being written to $PROGRAM_LOG and stdout"
 
 cd /notebooks
