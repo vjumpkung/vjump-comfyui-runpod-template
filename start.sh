@@ -118,8 +118,8 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
-    aria2c -c -s 16 -x 16 -k 1M https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared-linux-amd64.deb
-    dpkg -i cloudflared-linux-amd64.deb
+    aria2c --quiet --log=- --log-level=error -c -s 16 -x 16 -k 1M https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared-linux-amd64.deb
+    dpkg -i cloudflared-linux-amd64.deb >/dev/null
     cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT $JUPYTER_LAB_PORT | tee -a $LOG_PATH &
 }
 
