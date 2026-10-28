@@ -72,8 +72,8 @@ RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
     ipykernel \
     ipython \
     pickleshare \
-    "aiofiles==24.1.0" \
-    "httpx==0.28.1" \
+    aiofiles \
+    httpx \
     python-dotenv \
     uvicorn \
     "rich==14.0.0" \

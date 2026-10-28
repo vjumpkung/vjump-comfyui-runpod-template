@@ -3,7 +3,6 @@ export BRANCH_ID=${BRANCH_ID:-main}
 export PLATFORM_ID="RUNPOD"
 export TORCH_FORCE_WEIGHTS_ONLY_LOAD=0
 export PYTORCH_ENABLE_UNSAFE_LOAD=1
-
 export PORT=8000
 export COMFY_PORT=8188
 export HOST="0.0.0.0"
@@ -15,7 +14,7 @@ export PROGRAM_LOG=${PROGRAM_LOG:-"/notebooks/comfy.log"}
 export JUPYTER_LAB_PORT=${JUPYTER_LAB_PORT:-"8888"}
 export OUTPUT_PATH=${OUTPUT_PATH:-"/notebooks/output_images"}
 
-export CMD=${CMD:-"python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ --enable-cors-header --preview-method auto"}
+export CMD=${CMD:-"python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ --enable-cors-header --preview-method auto --disable-partner-nodes"}
 
 setup_logging() {
     mkdir -p "$(dirname "$LOG_PATH")" "$(dirname "$PROGRAM_LOG")"
@@ -38,17 +37,8 @@ nameserver 8.8.4.4" >/etc/resolv.conf
     echo "DNS configuration updated."
 }
 
-# Download notebooks
-download_notebooks() {
-    echo Updating Notebook...
-    cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/resource_manager.ipynb >resource_manager.ipynb
-    cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/main.py >./ui/main.py
-    cd /notebooks/ && curl -s https://raw.githubusercontent.com/vjumpkung/vjump-runpod-notebooks-and-script/refs/heads/$BRANCH_ID/ui/google_drive_download.py >./ui/google_drive_download.py
-    echo Update Nobebook Completed.
-}
-
 update_backend() {
-    cd /notebooks/program/vjumpkung-sd-ui-manager-backend/ && git pull --ff-only && uv pip install -r requirements.txt
+    cd /notebooks/program/vjumpkung-sd-ui-manager-backend/ && git pull -q --ff-only && uv pip install -q -r requirements.txt
 }
 
 download_model() {
@@ -134,7 +124,6 @@ start_backend
 start_jupyter
 run_cf_tunnel
 download_model
-download_notebooks
 run_custom_script
 start_comfyui
 sleep infinity
