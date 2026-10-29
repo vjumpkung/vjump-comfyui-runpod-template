@@ -38,6 +38,10 @@ RUN ln -snf "/usr/share/zoneinfo/${CONTAINER_TIMEZONE}" /etc/localtime && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
     mkdir -p /notebooks/program /notebooks/ui
 
+RUN aria2c --quiet --log=- --log-level=error -c -s 16 -x 16 -k 1M https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -d /tmp -o cloudflared-linux-amd64.deb && \
+    dpkg -i /tmp/cloudflared-linux-amd64.deb >/dev/null && \
+    rm -f /tmp/cloudflared-linux-amd64.deb
+
 # Persist downloaded Python in the BuildKit cache while copying the environment
 # files into the image, so rebuilds are fast without retaining uv's package cache.
 RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
@@ -76,7 +80,7 @@ RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
     httpx \
     python-dotenv \
     uvicorn \
-    "rich==14.0.0" \
+    rich \
     fastapi \
     websockets \
     requests \
@@ -93,7 +97,7 @@ RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
     uv pip install -r requirements.txt && \
     uv pip install -r custom_nodes/ComfyUI-Manager/requirements.txt && \
     uv pip install /tmp/sageattention-2.2.0+cu130.torch210.sm80.86.89.120-cp312-cp312-linux_x86_64.whl && \
-    uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.34-cu130-Basic-linux-20260331/llama_cpp_python-0.3.34+cu130.basic-cp312-cp312-linux_x86_64.whl && \
+    uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.5-cu130-linux-20261025/llama_cpp_python-0.4.5+cu130-cp312-cp312-linux_x86_64.whl && \
     uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.0/flash_attn-2.8.3+cu130torch2.10-cp312-cp312-linux_x86_64.whl && \
     uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.8.2/flash_attn_3-3.0.0+cu130torch2.10gite2743ab-cp39-abi3-linux_x86_64.whl && \
     uv pip list
@@ -101,7 +105,6 @@ RUN --mount=type=cache,id=uv-cache,target=/root/.cache/uv \
 WORKDIR /notebooks
 
 COPY start.sh gpu_info.sh start_process.sh stop_process.sh pre_download_model.py cf_tunnel.py ./
-COPY ui/ ./ui/
 COPY src/config.ini ./ComfyUI/user/__manager__/config.ini
 COPY src/extra_model_paths.yaml ./ComfyUI/extra_model_paths.yaml
 

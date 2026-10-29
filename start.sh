@@ -12,9 +12,9 @@ export RESOURCE_PATH=${RESOURCE_PATH:-"/notebooks/my-runpod-volume/models"}
 export LOG_PATH=${LOG_PATH:-"/notebooks/backend.log"}
 export PROGRAM_LOG=${PROGRAM_LOG:-"/notebooks/comfy.log"}
 export JUPYTER_LAB_PORT=${JUPYTER_LAB_PORT:-"8888"}
-export OUTPUT_PATH=${OUTPUT_PATH:-"/notebooks/output_images"}
+export OUTPUT_PATH=${OUTPUT_PATH:-"/notebooks/my-runpod-volume/output_images/"}
 
-export CMD=${CMD:-"python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/output_images/ --enable-cors-header --preview-method auto --disable-partner-nodes"}
+export CMD=${CMD:-"python -u main.py --listen 0.0.0.0 --disable-auto-launch --output-directory /notebooks/my-runpod-volume/output_images/ --enable-cors-header --preview-method auto --disable-partner-nodes"}
 
 setup_logging() {
     mkdir -p "$(dirname "$LOG_PATH")" "$(dirname "$PROGRAM_LOG")"
@@ -94,7 +94,7 @@ export_env_vars() {
 
 make_directory() {
     echo "create directory at $RESOURCE_PATH and output path at $OUTPUT_PATH"
-    mkdir -p "$RESOURCE_PATH"/{ultralytics_bbox,CatVTON,LLM,animatediff_models,animatediff_motion_lora,ckpts,clip,clip_vision,configs,controlnet,diffusers,diffusion_models,embeddings,facedetection,facerestore_models,gligen,grounding-dino,hypernetworks,insightface,ipadapter,loras,mmdets,nsfw_detector,onnx,photomaker,reactor,rembg,reswapper,sam2,sams,style_models,text_encoders,ultralytics,unet,upscale_models,vae,vae_approx}
+    mkdir -p "$RESOURCE_PATH"/{LLM,RMBG,animatediff_models,animatediff_motion_lora,audio_encoders,background_removal,blip,checkpoints,clip,clip_vision,configs,controlnet,detection,diffusers,diffusion_models,embeddings,facedetection,facerestore_models,facexlib,frame_interpolation,geometry_estimation,gligen,grounding-dino,hf_cache_dir,hypernetworks,inpaint,insightface,ipadapter,latent_upscale_models,loras,mmdets,model_patches,nsfw_detector,omnivoice,onnx,optical_flow,photomaker,pulid,reactor,rembg,reswapper,sam2,sams,style_models,text_encoders,ultralytics,unet,upscale_models,vae,vae_approx,yolo}
     mkdir -p "$OUTPUT_PATH"
 }
 
@@ -108,8 +108,6 @@ print_nvidia_gpu() {
 }
 
 run_cf_tunnel() {
-    aria2c --quiet --log=- --log-level=error -c -s 16 -x 16 -k 1M https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared-linux-amd64.deb
-    dpkg -i cloudflared-linux-amd64.deb >/dev/null
     cd /notebooks/ && nohup python cf_tunnel.py $PORT $COMFY_PORT $JUPYTER_LAB_PORT | tee -a $LOG_PATH &
 }
 
